@@ -6,15 +6,28 @@ import { getAll } from './BooksAPI';
 class Bookcase extends React.Component {
     constructor() {
         super();
-        this.state = { shelves: [] };
-    }
+        this.state = {
+            shelves: [
+                { name: 'Currently Reading', key: 'currentlyReading', books: [] },
+                { name: 'Want to Read', key: 'wantToRead', books: [] },
+                { name: 'Already Read', key: 'read', books: [] },
+            ]
+        };
+    };
 
     componentDidMount() {
         getAll().then(data => {
-            this.setState({ shelves: [
-                { name: 'All the things!', books: data }
-            ]});
+            this.setState((prevState) => ({
+                shelves: this.sortBooks(prevState.shelves, data)
+            }));
         });
+    };
+
+    sortBooks(shelves, books) {
+        return shelves.map( shelf => ({
+            ...shelf,
+            books: books.filter((book) => book.shelf === shelf.key)
+        }));
     };
 
     render () {
@@ -37,7 +50,7 @@ class Bookcase extends React.Component {
               </div>
             </div>
         );
-    }
+    };
 }
 
 export default Bookcase;
