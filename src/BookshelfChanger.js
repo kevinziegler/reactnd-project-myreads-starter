@@ -1,17 +1,36 @@
 import React from 'react';
+import { update } from './BooksAPI';
 
-const BookshelfChanger = () => {
-    return (
-        <div className="book-shelf-changer">
-            <select>
+class BookshelfChanger extends React.Component {
+    render() {
+        const options = [
+            { key: "currentlyReading", name: "Currently Reading" },
+            { key: "wantToRead", name: "Want to Read" },
+            { key: "read", name: "Read" },
+            { key: "none", name: "None" },
+        ];
+
+        return (
+            <div className="book-shelf-changer">
+              <select onChange={event => this.updateBook(event)}>
                 <option value="move" disabled>Move to...</option>
-                <option value="currentlyReading">Currently Reading</option>
-                <option value="wantToRead">Want to Read</option>
-                <option value="read">Read</option>
-                <option value="none">None</option>
-            </select>
-        </div>
-    );
+                    {options.map((option) => (
+                        <option
+                        value={option.key}
+                        selected={this.props.book.shelf === option.key}>
+                            {option.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+        );
+    }
+
+    updateBook(event) {
+        update(this.props.book, event.target.value)
+            .then(() => this.props.onMove());
+        event.preventDefault();
+    }
 };
 
 export default BookshelfChanger;
