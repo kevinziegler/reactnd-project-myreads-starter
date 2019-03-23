@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Book from './Book';
-import { search } from './BooksAPI';
+import { getAll, search } from './BooksAPI';
 
 class BookSearch extends React.Component {
     constructor() {
@@ -11,8 +11,22 @@ class BookSearch extends React.Component {
         this.renderResults = this.renderResults.bind(this);
         this.searchBooks = this.searchBooks.bind(this);
         this.processResults = this.processResults.bind(this);
+        this.refreshLocalBooks = this.refreshLocalBooks.bind(this);
 
         this.state = { query: '', results: [] };
+    }
+
+    componentDidMount() {
+        this.refreshLocalBooks();
+    }
+
+    refreshLocalBooks() {
+        getAll().then(books => this.setState({
+            books: books.reduce((idMap, book) => {
+                idMap[book.id] = book;
+                return idMap;
+            }, {})
+        }));
     }
 
     emptyMessage() {
@@ -27,7 +41,7 @@ class BookSearch extends React.Component {
         return (
             <ol className="books-grid">
                 { this.state.results.map(book => (
-                    <Book book={book} onMove={() => {}}/>
+                    <Book key={book.id} book={book} onMove={this.refreshLocalBooks} />
                 ))}
             </ol>
         );
@@ -46,6 +60,7 @@ class BookSearch extends React.Component {
             ? []
             : results;
 
+        results = results.map(book => this.state.books[book.id] || book);
         this.setState({ results });
     }
 
