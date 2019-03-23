@@ -2,6 +2,11 @@ import React from 'react';
 import { update } from './BooksAPI';
 
 class BookshelfChanger extends React.Component {
+    constructor() {
+        super();
+        this.isSelectedShelf = this.isSelectedShelf.bind(this);
+    }
+
     render() {
         const options = [
             { key: "currentlyReading", name: "Currently Reading" },
@@ -16,8 +21,8 @@ class BookshelfChanger extends React.Component {
                 <option value="move" disabled>Move to...</option>
                     {options.map((option) => (
                         <option
-                        value={option.key}
-                        selected={this.props.book.shelf === option.key}>
+                            value={option.key}
+                            selected={this.isSelectedShelf(option)}>
                             {option.name}
                         </option>
                     ))}
@@ -30,6 +35,11 @@ class BookshelfChanger extends React.Component {
         update(this.props.book, event.target.value)
             .then(() => this.props.onMove());
         event.preventDefault();
+    }
+
+    isSelectedShelf(shelf) {
+        const selectedShelf = this.props.book.shelf || 'none';
+        return selectedShelf === shelf.key;
     }
 };
 
