@@ -46,6 +46,7 @@ class Bookcase extends React.Component {
                 <div>
                     {this.state.shelves.map(shelf => (
                         <Shelf
+                          key={shelf.key}
                           name={shelf.name}
                           books={shelf.books}
                           onMove={this.refreshShelves}
