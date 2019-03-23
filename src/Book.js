@@ -4,6 +4,12 @@ import BookshelfChanger from './BookshelfChanger';
 
 const Book = ({book, onMove}) => {
     const authors = book.authors || [];
+    let imgUrl = '';
+
+    if (book.imageLinks && book.imageLinks.thumbnail) {
+        imgUrl = book.imageLinks.thumbnail;
+    }
+
     return (
         <li>
             <div className="book">
@@ -13,7 +19,7 @@ const Book = ({book, onMove}) => {
                         style={{
                             width: 128,
                             height: 193,
-                            backgroundImage: `url(${ book.imageLinks.smallThumbnail })`
+                            backgroundImage: `url(${imgUrl})`
                         }}
                     ></div>
                     <BookshelfChanger book={book} onMove={onMove} />
