@@ -3,6 +3,7 @@ import React from 'react';
 import BookshelfChanger from './BookshelfChanger';
 
 const Book = ({book, onMove}) => {
+    const authors = book.authors || [];
     return (
         <li>
             <div className="book">
@@ -18,7 +19,7 @@ const Book = ({book, onMove}) => {
                     <BookshelfChanger book={book} onMove={onMove} />
                 </div>
                 <div className="book-title">{book.title}</div>
-                <div className="book-authors">{book.authors.join(', ')}</div>
+                <div className="book-authors">{authors.join(', ')}</div>
             </div>
         </li>
     );
